@@ -1,9 +1,7 @@
 import boto3
 from botocore.exceptions import NoCredentialsError
 
-BUCKET_NAME = 'video-processing-service'
-RESULT_FOLDER_NAME = 'results'
-DOWNLOAD_FOLDER_NAME = 'uploads'
+from constants.constant_env import DOWNLOAD_FOLDER_NAME, BUCKET_NAME, RESULT_FOLDER_NAME
 
 
 class S3Helper:
@@ -28,10 +26,10 @@ class S3Helper:
             print(f"Erro ao baixar o arquivo do S3: {e}")
             raise
 
-    def upload_file_to_s3(self, local_path, file_name):
+    def upload_file_to_s3(self, local_path, result):
         try:
-            self.s3.upload_file(local_path, BUCKET_NAME, f"{RESULT_FOLDER_NAME}/{file_name}")
-            print(f"Arquivo {file_name} enviado para o S3")
+            self.s3.upload_file(local_path, BUCKET_NAME, result)
+            print(f"Arquivo enviado para o S3")
         except Exception as e:
             print(f"Erro ao fazer upload para o S3: {e}")
             raise
