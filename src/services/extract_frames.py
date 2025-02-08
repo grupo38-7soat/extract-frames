@@ -4,8 +4,9 @@ import threading
 
 MAX_NUMER_OF_THREADS = 10
 OUTPUT_DIR_NAME = 'temp_output_frames'
+FFMPEG = 'ffmpeg'
 
-class ExtractFrames(object):
+class ExtractFrames:
     def __init__(self, start_time=0, end_time=None, frame_skip=1):
         self.output_dir = OUTPUT_DIR_NAME
         self.start_time = start_time
@@ -20,7 +21,6 @@ class ExtractFrames(object):
         if self.frame_skip < 1:
             raise ValueError("O valor de frame_skip deve ser maior ou igual a 1.")
 
-        # Validando os parâmetros de tempo
         if self.end_time is None or self.end_time > duration:
             self.end_time = duration
 
@@ -33,23 +33,23 @@ class ExtractFrames(object):
 
     def __executor(self, video_path, output_dir, start_frame, end_frame, frame_skip=1, thread_id=0):
         try:
-            reader = imageio.get_reader(video_path, 'ffmpeg')
-            os.makedirs(output_dir, exist_ok=True)
+            with imageio.get_reader(video_path, FFMPEG) as reader:
+                os.makedirs(output_dir, exist_ok=True)
 
-            print(f"[Thread {thread_id}]: Processando frames de {start_frame} a {end_frame}")
+                print(f"[Thread {thread_id}]: Processando frames de {start_frame} a {end_frame}")
 
-            for index, frame in enumerate(reader):
-                if index < start_frame:
-                    continue
-                if index >= end_frame:
-                    break
-                if (index - start_frame) % frame_skip == 0:
-                    output_path = os.path.join(output_dir, f"{self.__file_name(index)}")
-                    imageio.imwrite(output_path, frame)
+                for index, frame in enumerate(reader):
+                    if index < start_frame:
+                        continue
+                    if index >= end_frame:
+                        break
+                    if (index - start_frame) % frame_skip == 0:
+                        output_path = os.path.join(output_dir, self.__file_name(index))
+                        imageio.imwrite(output_path, frame)
 
-            print(f"[Thread {thread_id}] Concluído!")
+                print(f"[Thread {thread_id}] Concluído!")
         except Exception as e:
-            print(f"Erro ao processar frames: {e}")
+            print(f"Erro ao processar frames na thread {thread_id}: {e}")
 
     def __extract_frames(self, video_path, start_frame, end_frame, frames_per_thread):
         threads = []
@@ -73,25 +73,23 @@ class ExtractFrames(object):
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
 
-        # Abrindo o vídeo
-        reader = imageio.get_reader(video_path, 'ffmpeg')
-        meta_data = reader.get_meta_data()
-        fps = meta_data['fps']
-        duration = meta_data['duration']  # Duração total do vídeo em segundos
+        with imageio.get_reader(video_path, FFMPEG) as reader:
+            meta_data = reader.get_meta_data()
+            fps = meta_data['fps']
+            duration = meta_data['duration']
 
-        self.__valid_attributes(duration)
+            self.__valid_attributes(duration)
 
-        print('Tempo total do vídeo: {} segundos'.format(duration))
+            print(f"Tempo total do vídeo: {duration} segundos")
 
-        # Calculando os frames correspondentes ao intervalo
-        start_frame = self.__calculate_frame(self.start_time, fps)
-        end_frame = self.__calculate_frame(self.end_time, fps)
+            start_frame = self.__calculate_frame(self.start_time, fps)
+            end_frame = self.__calculate_frame(self.end_time, fps)
 
-        total_frames = (end_frame - start_frame) // self.frame_skip
-        print('Numero de frames no video: {}'.format(total_frames))
+            total_frames = (end_frame - start_frame) // self.frame_skip
+            print(f"Número de frames no vídeo: {total_frames}")
 
-        frames_per_thread = total_frames // MAX_NUMER_OF_THREADS
+            frames_per_thread = total_frames // MAX_NUMER_OF_THREADS
 
-        self.__extract_frames(video_path, start_frame, end_frame, frames_per_thread)
+            self.__extract_frames(video_path, start_frame, end_frame, frames_per_thread)
 
-        print(f"Frames extraídos com sucesso para o diretório: {self.output_dir}")
+            print(f"Frames extraídos com sucesso para o diretório: {self.output_dir}")
