@@ -24,10 +24,10 @@ class DynamoRepository:
         }
         try:
             self.table.put_item(Item=item)
-            print(f"Item created: {item}")
+            print(f'[DYNAMO] - Item created: {item}')
             return True
         except ClientError as e:
-            print(f"Error creating item: {e.response['Error']['Message']}")
+            print(f'Error creating item: {e.response['Error']['Message']}')
             return False
 
     def update_item(self, user, datetime, status, result_url=None):
@@ -44,7 +44,7 @@ class DynamoRepository:
             expression_attribute_values[':result_url'] = result_url
 
         if not update_expression:
-            print("No attributes to update")
+            print('No attributes to update')
             return None
 
         update_expression = 'SET ' + ', '.join(update_expression)
@@ -55,11 +55,11 @@ class DynamoRepository:
                 UpdateExpression=update_expression,
                 ExpressionAttributeValues=expression_attribute_values,
                 ExpressionAttributeNames=expression_attribute_names,
-                ReturnValues="UPDATED_NEW"
+                ReturnValues='UPDATED_NEW'
             )
 
-            print(f"Item updated: {response.get('Attributes', None)}")
+            print(f'[DYNAMO] Item updated: {response.get('Attributes', None)}')
             return response
         except ClientError as e:
-            print(f"Error updating item: {e.response['Error']['Message']}")
+            print(f'Error updating item: {e.response['Error']['Message']}')
             return None

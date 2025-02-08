@@ -68,7 +68,11 @@ class SagaControl(object):
                 datetime=self.datetime_aux,
                 status=DYNAMO_STATUS_PROCESSING_CUT_FRAMES
             )
-            ExtractFrames(end_time=600, frame_skip=1).run(f'{OUTPUT_DOWNLOAD_DIR_NAME}/{self.video_name}')
+            start_time = self.payload.get('start_time_for_cut_frames') if self.payload.get('start_time_for_cut_frames') else 0
+            end_time= self.payload.get('end_time_for_cut_frames') if self.payload.get('end_time_for_cut_frames') or self.payload.get('end_time_for_cut_frames') > 0 else None
+            frame_skip= self.payload.get('skip_frame') if self.payload.get('skip_frame') else 1
+
+            ExtractFrames(start_time=start_time, end_time=end_time, frame_skip=frame_skip).run(f'{OUTPUT_DOWNLOAD_DIR_NAME}/{self.video_name}')
         except Exception as e:
             print(f'Error extracting frames: {e}')
             raise

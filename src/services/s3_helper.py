@@ -11,7 +11,7 @@ class S3Helper:
     def download_s3_stream(self, file_name, temp_video_path):
         try:
             object_key = f'{DOWNLOAD_FOLDER_NAME}/{file_name}'
-            print(f"Baixando {object_key} do bucket {BUCKET_NAME} para {temp_video_path}...")
+            print(f"Baixando {object_key} do bucket {BUCKET_NAME} para {temp_video_path}")
 
             with open(temp_video_path, 'wb') as f:
                 with self.s3.get_object(Bucket=BUCKET_NAME, Key=object_key)['Body'] as stream:

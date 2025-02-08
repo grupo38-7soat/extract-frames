@@ -35,8 +35,6 @@ class ExtractFrames:
             with imageio.get_reader(video_path, FFMPEG) as reader:
                 os.makedirs(output_dir, exist_ok=True)
 
-                print(f"[Thread {thread_id}]: Processando frames de {start_frame} a {end_frame}")
-
                 for index, frame in enumerate(reader):
                     if index < start_frame:
                         continue
@@ -45,8 +43,6 @@ class ExtractFrames:
                     if (index - start_frame) % frame_skip == 0:
                         output_path = os.path.join(output_dir, self.__file_name(index))
                         imageio.imwrite(output_path, frame)
-
-                print(f"[Thread {thread_id}] Concluído!")
         except Exception as e:
             print(f"Erro ao processar frames na thread {thread_id}: {e}")
 
@@ -80,7 +76,7 @@ class ExtractFrames:
 
                 self.__valid_attributes(duration)
 
-                print(f"Tempo total do vídeo: {duration} segundos")
+                print(f"Tempo total do vídeo a ser processado em segundos: {duration}")
 
                 start_frame = self.__calculate_frame(self.start_time, fps)
                 end_frame = self.__calculate_frame(self.end_time, fps)
@@ -89,6 +85,8 @@ class ExtractFrames:
                 print(f"Número de frames no vídeo: {total_frames}")
 
                 frames_per_thread = total_frames // MAX_NUMER_OF_THREADS
+
+                print('Iniciando extração de frames')
 
                 self.__extract_frames(video_path, start_frame, end_frame, frames_per_thread)
 
