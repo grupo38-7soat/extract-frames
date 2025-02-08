@@ -1,15 +1,15 @@
 # FFMPEG CONFIG
 FFMPEG = 'ffmpeg'
-MAX_NUMER_OF_THREADS = 50
+MAX_NUMER_OF_THREADS = 10
 
 # AWS CONFIG
 AWS_REGION = 'us-east-1'
 DYNAMO_TABLE_NAME = 'video-frames-control'
 
 # ENV AUX
-OUTPUT_FRAMES_DIR_NAME = 'temp_output_frames'
-OUTPUT_DOWNLOAD_DIR_NAME = 'temp_download'
-OUTPUT_ZIP_DIR_NAME = 'temp_zip'
+OUTPUT_FRAMES_DIR_NAME = '/tmp/temp_output_frames'
+OUTPUT_DOWNLOAD_DIR_NAME = '/tmp/temp_download'
+OUTPUT_ZIP_DIR_NAME = '/tmp/temp_zip'
 ENCODE='utf-8'
 
 # S3 CONFIG

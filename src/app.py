@@ -13,14 +13,13 @@ def lambda_handler(event, context):
         print(f"Erro ao executar o processo: {e}")
         raise
 
-# Exemplo de uso
-if __name__ == "__main__":
-    payload = {
-        "user": "123",
-        "video_name": "Tempos Modernos  Charlie Chaplin, Dublado.mp4",
-        "start_time_for_cut_frames": 0,
-        "end_time_for_cut_frames": None,
-        "skip_frame": 1
-    }
-    lambda_handler(payload, None)
-
+# # Exemplo de uso
+# if __name__ == "__main__":
+#     payload = {
+#         "user": "123",
+#         "video_name": "SampleVideo_1280x720_1mb.mp4",
+#         "start_time_for_cut_frames": 0,
+#         "end_time_for_cut_frames": 0,
+#         "skip_frame": 1
+#     }
+#     lambda_handler(payload, None)
