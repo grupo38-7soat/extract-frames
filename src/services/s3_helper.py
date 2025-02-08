@@ -1,14 +1,26 @@
 import boto3
 from botocore.exceptions import NoCredentialsError
 
+BUCKET_NAME = 'video-processing-service'
+RESULT_FOLDER_NAME = 'results'
+DOWNLOAD_FOLDER_NAME = 'uploads'
+
+
 class S3Helper:
     def __init__(self):
         self.s3 = boto3.client('s3')
 
-    def download_file_from_s3(self, bucket_name, s3_key, local_path):
+    def download_s3_stream(self, file_name, temp_video_path):
         try:
-            self.s3.download_file(bucket_name, s3_key, local_path)
-            print(f"Arquivo baixado do S3: s3://{bucket_name}/{s3_key} -> {local_path}")
+            object_key = f'{DOWNLOAD_FOLDER_NAME}/{file_name}'
+            print(f"Baixando {object_key} do bucket {BUCKET_NAME} para {temp_video_path}...")
+
+            with open(temp_video_path, 'wb') as f:
+                with self.s3.get_object(Bucket=BUCKET_NAME, Key=object_key)['Body'] as stream:
+                    for chunk in iter(lambda: stream.read(1024 * 1024), b""):  # Lendo 1MB por vez
+                        f.write(chunk)
+
+            print(f"Download concluído: {temp_video_path}")
         except NoCredentialsError:
             print("Credenciais não configuradas corretamente.")
             raise
@@ -16,10 +28,10 @@ class S3Helper:
             print(f"Erro ao baixar o arquivo do S3: {e}")
             raise
 
-    def upload_file_to_s3(self, local_path, bucket_name, s3_key):
+    def upload_file_to_s3(self, local_path, file_name):
         try:
-            self.s3.upload_file(local_path, bucket_name, s3_key)
-            print(f"Arquivo enviado para o S3: {local_path} -> s3://{bucket_name}/{s3_key}")
+            self.s3.upload_file(local_path, BUCKET_NAME, f"{RESULT_FOLDER_NAME}/{file_name}")
+            print(f"Arquivo {file_name} enviado para o S3")
         except Exception as e:
             print(f"Erro ao fazer upload para o S3: {e}")
             raise
