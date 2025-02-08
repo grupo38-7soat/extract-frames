@@ -19,9 +19,6 @@ class S3Helper:
                         f.write(chunk)
 
             print(f"Download concluído: {temp_video_path}")
-        except NoCredentialsError:
-            print("Credenciais não configuradas corretamente.")
-            raise
         except Exception as e:
             print(f"Erro ao baixar o arquivo do S3: {e}")
             raise

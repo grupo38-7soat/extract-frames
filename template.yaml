@@ -5,14 +5,14 @@ Resources:
   MyLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: MySQSLambda
+      FunctionName: extract-frames-function
       Handler: app.lambda_handler
       Runtime: python3.12
       CodeUri: src/
-      MemorySize: 2048
+      MemorySize: 3000
       Timeout: 900
       Architectures:
-        - x86_64
+        - arm64
       Policies:
         - AmazonS3FullAccess
         - AmazonDynamoDBFullAccess
@@ -27,4 +27,13 @@ Resources:
   MySQSQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: MySQSQueue
+      QueueName: extract-frames-queue
+      VisibilityTimeout: 920
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt MyDLQ.Arn
+        maxReceiveCount: 3
+
+  MyDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: extract-frames-queue-dlq

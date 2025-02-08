@@ -36,7 +36,6 @@ def test_create_item(dynamo_repository):
         datetime='2023-01-01T00:00:00Z',
         date='2023-01-01',
         user='user1',
-        result_url='http://example.com',
         status='PROCESSING',
         payload_inbound='{}',
         video_name='video.mp4'
@@ -49,7 +48,6 @@ def test_update_item(dynamo_repository):
         datetime='2023-01-01T00:00:00Z',
         date='2023-01-01',
         user='user1',
-        result_url='http://example.com',
         status='PROCESSING',
         payload_inbound='{}',
         video_name='video.mp4'
@@ -57,9 +55,7 @@ def test_update_item(dynamo_repository):
     result = dynamo_repository.update_item(
         user='user1',
         datetime='2023-01-01T00:00:00Z',
-        status='COMPLETED',
-        result_url='http://example.com/updated'
+        status='COMPLETED'
     )
     assert result is not None
     assert result['Attributes']['status'] == 'COMPLETED'
-    assert result['Attributes']['result_url'] == 'http://example.com/updated'

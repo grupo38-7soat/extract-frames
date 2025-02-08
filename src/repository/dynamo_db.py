@@ -11,12 +11,11 @@ class DynamoRepository:
                                        )
         self.table = self.dynamodb.Table(self.table_name)
 
-    def create_item(self, identification, datetime,date, user, result_url, status, payload_inbound, video_name):
+    def create_item(self, identification, datetime,date, user, status, payload_inbound, video_name):
         item = {
             'user': user,
             'datetime': datetime,
             'date':date,
-            'result_url': result_url,
             'status': status,
             'payload_inbound': payload_inbound,
             'video_name': video_name,
@@ -30,7 +29,7 @@ class DynamoRepository:
             print(f'Error creating item: {e.response['Error']['Message']}')
             return False
 
-    def update_item(self, user, datetime, status, result_url=None):
+    def update_item(self, user, datetime, status):
         update_expression = []
         expression_attribute_values = {}
         expression_attribute_names = {}
@@ -39,9 +38,6 @@ class DynamoRepository:
             update_expression.append('#status = :status')
             expression_attribute_values[':status'] = status
             expression_attribute_names['#status'] = 'status'
-        if result_url:
-            update_expression.append('result_url = :result_url')
-            expression_attribute_values[':result_url'] = result_url
 
         if not update_expression:
             print('No attributes to update')

@@ -36,7 +36,6 @@ class SagaControl(object):
                 datetime=self.datetime_aux,
                 date=datetime.now().strftime('%Y-%m-%d'),
                 user=self.user,
-                result_url=None,
                 status=DYNAMO_STATUS_START_PROCESS,
                 payload_inbound=json.dumps(self.payload),
                 video_name=self.video_name
