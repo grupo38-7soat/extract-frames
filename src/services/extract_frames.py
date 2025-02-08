@@ -2,12 +2,12 @@ import os
 import imageio
 import threading
 
-from constants.constant_env import OUTPUT_DIR_NAME, FFMPEG, MAX_NUMER_OF_THREADS
+from constants.constant_env import OUTPUT_FRAMES_DIR_NAME, FFMPEG, MAX_NUMER_OF_THREADS
 
 
 class ExtractFrames:
     def __init__(self, start_time=0, end_time=None, frame_skip=1):
-        self.output_dir = OUTPUT_DIR_NAME
+        self.output_dir = OUTPUT_FRAMES_DIR_NAME
         self.start_time = start_time
         self.end_time = end_time
         self.frame_skip = frame_skip
@@ -95,4 +95,3 @@ class ExtractFrames:
                 print(f"Frames extraídos com sucesso para o diretório: {self.output_dir}")
         except Exception as e:
             print(f"Erro ao extrair frames: {e}")
-            raise
