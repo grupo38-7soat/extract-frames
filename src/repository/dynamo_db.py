@@ -30,7 +30,7 @@ class DynamoRepository:
             print(f"Error creating item: {e.response['Error']['Message']}")
             return False
 
-    def update_item(self, identification, datetime, status, result_url=None):
+    def update_item(self, user, datetime, status, result_url=None):
         update_expression = []
         expression_attribute_values = {}
         expression_attribute_names = {}
@@ -51,7 +51,7 @@ class DynamoRepository:
 
         try:
             response = self.table.update_item(
-                Key={'id': identification, 'datetime': datetime},
+                Key={'user': user, 'datetime': datetime},
                 UpdateExpression=update_expression,
                 ExpressionAttributeValues=expression_attribute_values,
                 ExpressionAttributeNames=expression_attribute_names,
