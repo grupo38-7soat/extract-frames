@@ -19,13 +19,13 @@ Em caso de erro, o status será alterado para:
 
 Como mencionado, o usuário pode solicitar um corte de vídeo especificando o tempo de início e fim, além da quantidade de frames a serem pulados. Para isso, o usuário deve enviar um JSON com as seguintes informações:
 ```json
-{
-    "user": "user",
-    "video_name": "video_name",
-    "start_time": 0,
-    "end_time": 0,
-    "skip_frames": 1
-}
+    {
+        "user": "123",
+        "video_name": "SampleVideo_1280x720_1mb.mp4",
+        "start_time_for_cut_frames": 0,
+        "end_time_for_cut_frames": 0,
+        "skip_frame": 1
+    }
 ```
 
 Todos os frames extraídos são salvos em um arquivo compactado (ZIP), que é enviado para o S3. O nome do arquivo gerado inclui o nome do usuário, a data e hora da execução, e o nome do vídeo, tudo em um hash para garantir a unicidade e evitar sobrescrições.- ![Logo da Aplicação](img/s3.png)

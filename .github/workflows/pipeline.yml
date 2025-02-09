@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - main
-      - develop
 
 env:
   CLUSTER_NAME: "infra-hackathon"  # Nome do cluster EKS
